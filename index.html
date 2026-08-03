@@ -381,7 +381,7 @@
         card.innerHTML = `
           <div class="card-img-container">
             <img src="${gift.image}" alt="${gift.title}" class="card-img" />
-            <span class="badge-bought">✓ Gekauft</span>
+            <span class="badge-bought">✓ Schon gekauft</span>
           </div>
           <div class="card-info">
             <h2 class="card-title">${gift.title}</h2>
@@ -392,7 +392,7 @@
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
               </a>
               <button class="btn-toggle" onclick="toggleBought(${gift.id})">
-                ${isBought ? 'Freigeben' : 'Als gekauft markieren'}
+                ${isBought ? 'Wieder freigeben' : 'Als gekauft markieren'}
               </button>
             </div>
           </div>
