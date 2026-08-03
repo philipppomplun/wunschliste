@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phil's Phavoriten</title>
   
-  <!-- Custom Playful & Sans Fonts -->
+  <!-- Custom Playful & Google Sans Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -37,7 +37,7 @@
 
     body {
       background-color: var(--outer-bg);
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-family: 'Google Sans', -apple-system, sans-serif;
       color: var(--text-dark);
       padding: 2rem 1rem;
       min-height: 100vh;
@@ -63,36 +63,53 @@
       align-items: center;
     }
 
-    .avatar-wrapper {
-      position: relative;
-      margin-bottom: 0.75rem;
+    /* Container für Bild + Pill-Headline nebeneinander */
+    .title-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      animation: float 3s ease-in-out infinite;
     }
 
     .avatar-img {
-      width: 90px;
-      height: 90px;
+      width: 130px; /* Vergrößert */
+      height: 130px;
       object-fit: contain;
       display: block;
+      transform: translateY(-5px); /* Perfekte Ausrichtung zur Pill */
     }
 
+    /* Bubblige & verspielte Headline */
     .title-pill {
       background-color: var(--purple-primary);
       color: #ffffff;
       font-family: 'Fredoka', cursive;
-      font-size: 2.3rem;
-      padding: 0.6rem 2.2rem;
-      border-radius: 20px;
-      transform: rotate(-2.5deg);
+      font-size: 2.5rem;
+      font-weight: 700;
+      padding: 0.75rem 2.8rem;
+      border-radius: 50px;
+      transform: rotate(-3deg);
       display: inline-block;
-      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.25);
-      letter-spacing: 0.5px;
-      margin-bottom: 1.25rem;
+      box-shadow: 0 10px 0px var(--purple-dark), 0 15px 25px rgba(108, 92, 231, 0.3);
+      letter-spacing: 0.8px;
+      user-select: none;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
     }
 
     header p {
       color: var(--text-muted);
-      font-weight: 700;
-      font-size: 1.05rem;
+      font-weight: 500;
+      font-size: 1.1rem;
       letter-spacing: -0.2px;
     }
 
@@ -160,17 +177,17 @@
 
     .card-title {
       font-size: 1rem;
-      font-weight: 800;
+      font-weight: 700;
       text-transform: uppercase;
       line-height: 1.25;
       margin-bottom: 0.4rem;
       color: var(--text-dark);
-      letter-spacing: -0.3px;
+      letter-spacing: -0.2px;
     }
 
     .card-price {
       font-size: 0.88rem;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--text-muted);
       text-transform: uppercase;
       margin-bottom: 1.5rem;
@@ -190,7 +207,7 @@
       padding: 0.75rem 1rem;
       border-radius: var(--radius-btn);
       font-size: 0.8rem;
-      font-weight: 800;
+      font-weight: 700;
       text-transform: uppercase;
       display: flex;
       align-items: center;
@@ -223,6 +240,7 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-family: 'Google Sans', -apple-system, sans-serif;
     }
 
     .btn-toggle:hover {
@@ -248,9 +266,18 @@
         padding: 1.5rem 1rem;
         border-radius: 20px;
       }
+      .title-wrapper {
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .avatar-img {
+        width: 100px;
+        height: 100px;
+        transform: none;
+      }
       .title-pill {
-        font-size: 1.75rem;
-        padding: 0.5rem 1.5rem;
+        font-size: 1.85rem;
+        padding: 0.6rem 1.8rem;
       }
       .wishlist-grid {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -269,11 +296,10 @@
 
   <div class="container">
     <header>
-      <div class="avatar-wrapper">
+      <div class="title-wrapper">
         <img src="thumbsup.png" alt="Phil" class="avatar-img" />
+        <div class="title-pill">Phil's Phavoriten</div>
       </div>
-
-      <div class="title-pill">Phil's Phavoriten</div>
       
       <p>Eine Liste von Dingen, über die ich mich freuen würde.</p>
     </header>
@@ -284,7 +310,6 @@
   </div>
 
   <script>
-    // 1. ZUGANGSDATEN FÜR GEKAUFT-STATUS (JSONBIN) & GOOGLE SHEET CSV
     const BIN_ID = "6a709c5eda38895dfeb3cbc7";
     const API_KEY = "$2a$10$OIcRnf.UfA2mZTYyQLQOfOSS4uea70.yT5U183rae7bm94DLPSFCG";
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8jbrxPiDJa8e2fCGKGuOP4dhLPFcppY8ridt8X6dhZ6aodXaLZV_Bt7r-30KAOqg4rppfvwv3ak_n/pub?output=csv";
@@ -292,22 +317,17 @@
     let gifts = [];
     let boughtItemsMap = {};
 
-    // Google Sheets CSV auslesen und in Objekte umwandeln
     async function loadGiftsFromSheet() {
       try {
         const res = await fetch(SHEET_CSV_URL);
         const csvText = await res.text();
         
-        // Zeilen trennen
         const lines = csvText.trim().split(/\r?\n/);
         const parsedGifts = [];
 
-        // Ab Zeile 1 lesen (Zeile 0 = Header)
         for (let i = 1; i < lines.length; i++) {
-          // CSV-Zeile korrekt parsen (beachtet Kommas in Texten)
           const cols = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
           
-          // Nur vollständige Zeilen mit vorhandener ID und Titel übernehmen
           if (cols.length >= 5 && cols[0] && cols[1]) {
             parsedGifts.push({
               id: parseInt(cols[0]),
@@ -325,7 +345,6 @@
       }
     }
 
-    // Status (gekauft/nicht gekauft) von JSONBin laden
     async function loadStatus() {
       try {
         const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
@@ -338,14 +357,12 @@
       }
     }
 
-    // Initiales Laden aller Daten
     async function init() {
       const [fetchedGifts] = await Promise.all([loadGiftsFromSheet(), loadStatus()]);
       gifts = fetchedGifts;
       renderWishlist();
     }
 
-    // Status umschalten und speichern
     async function toggleBought(id) {
       boughtItemsMap[id] = !boughtItemsMap[id];
       renderWishlist();
@@ -364,7 +381,6 @@
       }
     }
 
-    // Wunschliste rendern
     function renderWishlist() {
       const container = document.getElementById('wishlist');
       container.innerHTML = '';
@@ -381,7 +397,7 @@
         card.innerHTML = `
           <div class="card-img-container">
             <img src="${gift.image}" alt="${gift.title}" class="card-img" />
-            <span class="badge-bought">✓ Schon gekauft</span>
+            <span class="badge-bought">✓ Gekauft</span>
           </div>
           <div class="card-info">
             <h2 class="card-title">${gift.title}</h2>
@@ -392,7 +408,7 @@
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
               </a>
               <button class="btn-toggle" onclick="toggleBought(${gift.id})">
-                ${isBought ? 'Wieder freigeben' : 'Als gekauft markieren'}
+                ${isBought ? 'Freigeben' : 'Als gekauft markieren'}
               </button>
             </div>
           </div>
