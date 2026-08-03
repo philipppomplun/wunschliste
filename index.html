@@ -399,14 +399,14 @@
         card.innerHTML = `
           <div class="card-img-container">
             <img src="${gift.image}" alt="${gift.title}" class="card-img" />
-            <span class="badge-bought">✓ Gekauft</span>
+            <span class="badge-bought">✓ Geschenkt</span>
           </div>
           <div class="card-info">
             <h2 class="card-title">${gift.title}</h2>
             <div class="card-price">${gift.price}</div>
             <div class="card-actions">
               <a href="${gift.url}" target="_blank" rel="noopener noreferrer" class="btn-shop">
-                <span>${isBought ? 'Schon geschenkt' : 'Ansehen'}</span>
+                <span>${isBought ? 'Schon weg' : 'Ansehen'}</span>
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
               </a>
               <button class="btn-toggle" onclick="toggleBought(${gift.id})">
