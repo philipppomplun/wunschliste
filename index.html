@@ -46,7 +46,6 @@
       align-items: flex-start;
     }
 
-    /* Container matching Framer layout */
     .container {
       background-color: var(--page-bg);
       border-radius: var(--radius-large);
@@ -56,7 +55,6 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
     }
 
-    /* Header section */
     header {
       text-align: center;
       margin-bottom: 3.5rem;
@@ -98,14 +96,12 @@
       letter-spacing: -0.2px;
     }
 
-    /* Grid Layout */
     .wishlist-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 1.5rem;
     }
 
-    /* Card styling */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius-card);
@@ -234,7 +230,6 @@
       background-color: rgba(0,0,0,0.03);
     }
 
-    /* Bought state overlay */
     .card.is-bought {
       opacity: 0.65;
     }
@@ -275,11 +270,9 @@
   <div class="container">
     <header>
       <div class="avatar-wrapper">
-        <!-- Dein lokales Bild thumbsup.png -->
         <img src="thumbsup.png" alt="Phil" class="avatar-img" />
       </div>
 
-      <!-- Violettes schräges Pill-Label -->
       <div class="title-pill">Phil's Phavoriten</div>
       
       <p>Eine Liste von Dingen, über die ich mich freuen würde.</p>
@@ -291,66 +284,68 @@
   </div>
 
   <script>
-    // 1. ZUGANGSDATEN VON JSONBIN.IO
+    // 1. ZUGANGSDATEN FÜR GEKAUFT-STATUS (JSONBIN) & GOOGLE SHEET CSV
     const BIN_ID = "6a709c5eda38895dfeb3cbc7";
     const API_KEY = "$2a$10$OIcRnf.UfA2mZTYyQLQOfOSS4uea70.yT5U183rae7bm94DLPSFCG";
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8jbrxPiDJa8e2fCGKGuOP4dhLPFcppY8ridt8X6dhZ6aodXaLZV_Bt7r-30KAOqg4rppfvwv3ak_n/pub?output=csv";
 
-    // 2. PRODUKTE AUS DEINEM FRAMER-DESIGN
-    const gifts = [
-      { 
-        id: 1, 
-        title: "H&M Gutschein", 
-        price: "AB 10 €", 
-        image: "https://images.unsplash.com/photo-1556742049-0a670fc8078a?w=400&auto=format&fit=crop", 
-        url: "https://www.hm.com" 
-      },
-      { 
-        id: 2, 
-        title: "Bücher von Counterprint Books", 
-        price: "AB 15 €", 
-        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop", 
-        url: "https://www.counter-print.co.uk" 
-      },
-      { 
-        id: 3, 
-        title: "The Ordinary Moisturizer", 
-        price: "CA. 15 €", 
-        image: "https://images.unsplash.com/photo-1608248597263-00079e960454?w=400&auto=format&fit=crop", 
-        url: "https://theordinary.com" 
-      },
-      { 
-        id: 4, 
-        title: "Canyon Rennrad Klingel", 
-        price: "24.95 €", 
-        image: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=400&auto=format&fit=crop", 
-        url: "https://www.canyon.com" 
-      },
-      { 
-        id: 5, 
-        title: "Jon Bellion: Father Figure Vinyl", 
-        price: "31.95 €", 
-        image: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&auto=format&fit=crop", 
-        url: "https://www.amazon.de" 
-      }
-    ];
-
+    let gifts = [];
     let boughtItemsMap = {};
 
-    // Daten von JSONBin abrufen
+    // Google Sheets CSV auslesen und in Objekte umwandeln
+    async function loadGiftsFromSheet() {
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        const csvText = await res.text();
+        
+        // Zeilen trennen
+        const lines = csvText.trim().split(/\r?\n/);
+        const parsedGifts = [];
+
+        // Ab Zeile 1 lesen (Zeile 0 = Header)
+        for (let i = 1; i < lines.length; i++) {
+          // CSV-Zeile korrekt parsen (beachtet Kommas in Texten)
+          const cols = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
+          
+          // Nur vollständige Zeilen mit vorhandener ID und Titel übernehmen
+          if (cols.length >= 5 && cols[0] && cols[1]) {
+            parsedGifts.push({
+              id: parseInt(cols[0]),
+              title: cols[1],
+              price: cols[2],
+              image: cols[3],
+              url: cols[4]
+            });
+          }
+        }
+        return parsedGifts;
+      } catch (e) {
+        console.error("Fehler beim Laden des Google Sheets:", e);
+        return [];
+      }
+    }
+
+    // Status (gekauft/nicht gekauft) von JSONBin laden
     async function loadStatus() {
       try {
         const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
           headers: { 'X-Master-Key': API_KEY }
         });
         const data = await res.json();
-        boughtItemsMap = data.record && Object.keys(data.record).length > 0 ? data.record : { "0": false };
-        renderWishlist();
+        boughtItemsMap = data.record && Object.keys(data.record).length > 0 ? data.record : {};
       } catch (e) {
-        console.error("Fehler beim Laden:", e);
+        console.error("Fehler beim Laden des Status:", e);
       }
     }
 
-    // Status aktualisieren und speichern
+    // Initiales Laden aller Daten
+    async function init() {
+      const [fetchedGifts] = await Promise.all([loadGiftsFromSheet(), loadStatus()]);
+      gifts = fetchedGifts;
+      renderWishlist();
+    }
+
+    // Status umschalten und speichern
     async function toggleBought(id) {
       boughtItemsMap[id] = !boughtItemsMap[id];
       renderWishlist();
@@ -365,7 +360,7 @@
           body: JSON.stringify(boughtItemsMap)
         });
       } catch (e) {
-        console.error("Fehler beim Speichern:", e);
+        console.error("Fehler beim Speichern des Status:", e);
       }
     }
 
@@ -373,6 +368,11 @@
     function renderWishlist() {
       const container = document.getElementById('wishlist');
       container.innerHTML = '';
+
+      if (gifts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; font-weight: 700;">Keine Produkte gefunden.</p>';
+        return;
+      }
 
       gifts.forEach(gift => {
         const isBought = !!boughtItemsMap[gift.id];
@@ -401,7 +401,7 @@
       });
     }
 
-    loadStatus();
+    init();
   </script>
 </body>
 </html>
