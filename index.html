@@ -406,11 +406,11 @@
             <div class="card-price">${gift.price}</div>
             <div class="card-actions">
               <a href="${gift.url}" target="_blank" rel="noopener noreferrer" class="btn-shop">
-                <span>${isBought ? 'Abgehakt' : 'Gönnen'}</span>
+                <span>${isBought ? 'Schon geschenkt' : 'Ansehen'}</span>
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
               </a>
               <button class="btn-toggle" onclick="toggleBought(${gift.id})">
-                ${isBought ? 'Freigeben' : 'Als gekauft markieren'}
+                ${isBought ? 'Doch nicht?' : 'Schenke ich!'}
               </button>
             </div>
           </div>
