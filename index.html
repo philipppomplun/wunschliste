@@ -3,221 +3,354 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meine Geburtstags-Wunschliste</title>
+  <title>Phil's Phavoriten</title>
+  
+  <!-- Custom Fonts (Fredoka für den Header-Pill, Plus Jakarta Sans für den Rest) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --border: #e2e8f0;
-      --radius: 16px;
+      --outer-bg: #eae8e1;
+      --page-bg: #f4f1ea;
+      --card-bg: #e8e3d8;
+      --image-bg: #ffffff;
+      --purple-primary: #6c5ce7;
+      --purple-dark: #5849c4;
+      --text-dark: #1e1e1e;
+      --text-muted: #787570;
+      --btn-bg: #222222;
+      --btn-hover: #000000;
+      --bought-badge: #10b981;
+      --radius-large: 28px;
+      --radius-card: 22px;
+      --radius-img: 16px;
+      --radius-btn: 12px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
+      background-color: var(--outer-bg);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: var(--text-dark);
       padding: 2rem 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
     }
 
+    /* Äußerer abgerundeter Container */
+    .container {
+      background-color: var(--page-bg);
+      border-radius: var(--radius-large);
+      padding: 3rem 2.5rem 4rem 2.5rem;
+      max-width: 1280px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Header Bereich */
     header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
+    .avatar-wrapper {
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+
+    .avatar-img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .sparkle-icon {
+      position: absolute;
+      top: 0;
+      right: -25px;
+      color: var(--purple-primary);
+    }
+
+    /* Das violette schräge Pill-Label */
+    .title-pill {
+      background-color: var(--purple-primary);
+      color: #ffffff;
+      font-family: 'Fredoka', cursive;
+      font-size: 2.3rem;
+      padding: 0.6rem 2.2rem;
+      border-radius: 20px;
+      transform: rotate(-2.5deg);
+      display: inline-block;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.25);
+      letter-spacing: 0.5px;
+      margin-bottom: 1.25rem;
     }
 
     header p {
       color: var(--text-muted);
-      font-size: 1.1rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.2px;
     }
 
+    /* Grid Layout */
     .wishlist-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.5rem;
     }
 
+    /* Produktkarte */
     .card {
       background: var(--card-bg);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow: hidden;
+      border-radius: var(--radius-card);
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
     }
 
-    .card-img-wrapper {
+    .card-img-container {
+      background-color: var(--image-bg);
+      border-radius: var(--radius-img);
       width: 100%;
-      height: 200px;
-      background-color: #f1f5f9;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
       position: relative;
+      padding: 12px;
     }
 
     .card-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
     .badge-bought {
       display: none;
       position: absolute;
-      top: 12px;
-      right: 12px;
-      background-color: var(--success);
+      top: 10px;
+      right: 10px;
+      background-color: var(--bought-badge);
       color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    .card-content {
-      padding: 1.5rem;
+    .card-info {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
     .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.25;
+      margin-bottom: 0.4rem;
+      color: var(--text-dark);
+      letter-spacing: -0.2px;
     }
 
     .card-price {
-      font-size: 1.1rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
     }
 
     .card-actions {
       margin-top: auto;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
-    .btn {
-      text-align: center;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.2s ease, opacity 0.2s ease;
-    }
-
-    .btn-buy {
-      background-color: var(--primary);
+    .btn-shop {
+      background-color: var(--btn-bg);
       color: white;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-btn);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.2s ease;
+      letter-spacing: 0.5px;
     }
 
-    .btn-buy:hover {
-      background-color: var(--primary-hover);
+    .btn-shop:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .btn-shop svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .btn-toggle {
-      background-color: #f1f5f9;
-      color: var(--text-main);
-      border: 1px solid var(--border);
+      background: transparent;
+      border: 1.5px solid var(--text-muted);
+      color: var(--text-dark);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-btn);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .btn-toggle:hover {
-      background-color: #e2e8f0;
+      border-color: var(--text-dark);
+      background-color: rgba(0,0,0,0.03);
     }
 
+    /* Zustand wenn bereits gekauft */
     .card.is-bought {
-      opacity: 0.65;
+      opacity: 0.6;
     }
 
     .card.is-bought .badge-bought {
       display: block;
     }
 
-    .card.is-bought .btn-buy {
+    .card.is-bought .btn-shop {
       pointer-events: none;
-      background-color: #94a3b8;
+      background-color: #999999;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem 1rem;
+        border-radius: 20px;
+      }
+      .title-pill {
+        font-size: 1.75rem;
+        padding: 0.5rem 1.5rem;
+      }
+      .wishlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        padding: 0.75rem;
+      }
+      .card-img-container {
+        height: 150px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🎁 Meine Geburtstags-Wunschliste</h1>
-    <p>Hier findet ihr ein paar Dinge, über die ich mich riesig freuen würde!</p>
-  </header>
+  <div class="container">
+    <header>
+      <div class="avatar-wrapper">
+        <!-- Dein Foto mit Thumbs-Up (Ersetze die URL durch dein eigenes Freisteller-Bild) -->
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop" alt="Phil" class="avatar-img" />
+        <svg class="sparkle-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3v3m0 12v3M3 12h3m12 0h3m-3.5-6.5l-2 2m-7 7l-2 2m0-11l2 2m7 7l2 2" stroke-linecap="round"/>
+          <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="currentColor"/>
+        </svg>
+      </div>
 
-  <main class="wishlist-grid" id="wishlist">
-    <p style="text-align: center; grid-column: 1 / -1;">Wunschliste wird geladen...</p>
-  </main>
+      <div class="title-pill">Phil's Phavoriten</div>
+      <p>Eine Liste von Dingen, über die ich mich freuen würde.</p>
+    </header>
+
+    <main class="wishlist-grid" id="wishlist">
+      <p style="text-align: center; grid-column: 1 / -1; font-weight: 700;">Wunschliste wird geladen...</p>
+    </main>
+  </div>
 
   <script>
     // 1. ZUGANGSDATEN VON JSONBIN.IO
     const BIN_ID = "6a709c5eda38895dfeb3cbc7";
     const API_KEY = "$2a$10$OIcRnf.UfA2mZTYyQLQOfOSS4uea70.yT5U183rae7bm94DLPSFCG";
 
-    // 2. DEINE PRODUKTE (Hier deine Wünsche eintragen)
+    // 2. PRODUKTE AUS DEINEM FRAMER-DESIGN
     const gifts = [
       { 
         id: 1, 
-        title: "Fahrrad-Handyhalterung", 
-        price: "24,99 €", 
-        image: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=500&auto=format&fit=crop", 
-        url: "https://example.com/item1" 
+        title: "H&M GUTSCHEIN", 
+        price: "AB 10 €", 
+        image: "https://images.unsplash.com/photo-1556742049-0a670fc8078a?w=400&auto=format&fit=crop", 
+        url: "https://www.hm.com" 
       },
       { 
         id: 2, 
-        title: "Espressokocher Edelstahl", 
-        price: "39,90 €", 
-        image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop", 
-        url: "https://example.com/item2" 
+        title: "BÜCHER VON COUNTERPRINT BOOKS", 
+        price: "AB 15 €", 
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop", 
+        url: "https://www.counter-print.co.uk" 
       },
       { 
         id: 3, 
-        title: "Gutschein für ein Abendessen", 
-        price: "Beliebig", 
-        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop", 
-        url: "#" 
+        title: "THE ORDINARY MOISTURIZER", 
+        price: "CA. 15 €", 
+        image: "https://images.unsplash.com/photo-1608248597263-00079e960454?w=400&auto=format&fit=crop", 
+        url: "https://theordinary.com" 
+      },
+      { 
+        id: 4, 
+        title: "CANYON RENNRAD KLINGEL", 
+        price: "24.95 €", 
+        image: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=400&auto=format&fit=crop", 
+        url: "https://www.canyon.com" 
+      },
+      { 
+        id: 5, 
+        title: "JON BELLION: FATHER FIGURE VINYL", 
+        price: "31.95 €", 
+        image: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&auto=format&fit=crop", 
+        url: "https://www.amazon.de" 
       }
     ];
 
     let boughtItemsMap = {};
 
-    // Daten von JSONBin abrufen
     async function loadStatus() {
       try {
         const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
           headers: { 'X-Master-Key': API_KEY }
         });
         const data = await res.json();
-        
-        // Fallback, falls der Record leer sein sollte
         boughtItemsMap = data.record && Object.keys(data.record).length > 0 ? data.record : { "0": false };
         renderWishlist();
       } catch (e) {
@@ -225,7 +358,6 @@
       }
     }
 
-    // Status aktualisieren und speichern
     async function toggleBought(id) {
       boughtItemsMap[id] = !boughtItemsMap[id];
       renderWishlist();
@@ -244,7 +376,6 @@
       }
     }
 
-    // Wunschliste anzeigen
     function renderWishlist() {
       const container = document.getElementById('wishlist');
       container.innerHTML = '';
@@ -254,19 +385,20 @@
         const card = document.createElement('div');
         card.className = `card ${isBought ? 'is-bought' : ''}`;
         card.innerHTML = `
-          <div class="card-img-wrapper">
+          <div class="card-img-container">
             <img src="${gift.image}" alt="${gift.title}" class="card-img" />
-            <span class="badge-bought">✓ Bereits gekauft</span>
+            <span class="badge-bought">✓ Gekauft</span>
           </div>
-          <div class="card-content">
+          <div class="card-info">
             <h2 class="card-title">${gift.title}</h2>
             <div class="card-price">${gift.price}</div>
             <div class="card-actions">
-              <a href="${gift.url}" target="_blank" rel="noopener noreferrer" class="btn btn-buy">
-                ${isBought ? 'Bereits geschenkt' : 'Produkt ansehen / kaufen'}
+              <a href="${gift.url}" target="_blank" rel="noopener noreferrer" class="btn-shop">
+                <span>${isBought ? 'Abgehakt' : 'Zum Shop'}</span>
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
               </a>
-              <button class="btn btn-toggle" onclick="toggleBought(${gift.id})">
-                ${isBought ? 'Wieder freigeben' : 'Als gekauft abhaken'}
+              <button class="btn-toggle" onclick="toggleBought(${gift.id})">
+                ${isBought ? 'Freigeben' : 'Als gekauft abhaken'}
               </button>
             </div>
           </div>
